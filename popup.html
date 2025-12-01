@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Prompt Builder</title>
+    <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+<div class="container">
+    <h1>Prompt Builder</h1>
+    <div id="parts"></div>
+
+    <div class="controls">
+        <label for="newPart">Novo trecho</label>
+        <textarea id="newPart" placeholder="Escreva um trecho do prompt..." rows="3"></textarea>
+        <button id="addPart">+ Adicionar</button>
+    </div>
+
+    <div class="actions">
+        <button id="concatenate">Concatenar</button>
+        <button id="copy">Copiar</button>
+        <button id="sendChatGPT">Enviar ao ChatGPT</button>
+    </div>
+
+    <label for="separator">Separador:</label>
+    <input id="separator" value="\n\n" />
+
+    <h3>Prompt final</h3>
+    <label for="finalPrompt" class="sr-only">Prompt final</label>
+    <textarea id="finalPrompt" rows="6" readonly></textarea>
+
+    <small class="note">Os trechos são salvos localmente no navegador.</small>
+
+    <!-- New section: saved prompt slots -->
+    <hr />
+    <h3>Memória (até 5 prompts)</h3>
+    <div class="slot-controls">
+        <label for="slotName">Nome do prompt</label>
+        <input id="slotName" placeholder="Nome do prompt (opcional)" />
+        <button id="saveCurrentToSlot">Salvar o atual em um slot</button>
+    </div>
+    <div id="slots"></div>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>

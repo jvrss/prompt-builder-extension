@@ -1,0 +1,28 @@
+:root{
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    --accent: #0b5fff;
+}
+body{ margin:0; padding:12px; width:360px; min-height:700px; overflow-y:auto; }
+.container h1{ font-size:16px; margin:0 0 8px 0; }
+#parts{ margin-bottom:10px; max-height:200px; overflow:auto; border:1px solid #eee; padding:6px; border-radius:6px; background:#fafafa;}
+.part{ padding:6px; margin-bottom:6px; background:white; border-radius:6px; box-shadow:0 1px 0 rgba(0,0,0,0.03); display:flex; gap:6px; align-items:flex-start;}
+.part textarea{ flex:1; border:1px solid #ddd; border-radius:4px; padding:6px; resize:vertical; min-height:36px;}
+.part .btns{ display:flex; flex-direction:column; gap:6px; }
+button{ cursor:pointer; padding:6px 8px; border-radius:6px; border:1px solid #ddd; background:#fff;}
+button:hover{ box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+.controls{ display:flex; gap:6px; margin-bottom:8px; }
+.controls textarea{ flex:1; padding:6px; border-radius:6px; border:1px solid #ddd; }
+.actions{ display:flex; gap:6px; margin-bottom:8px; }
+#separator{ width:100%; margin-bottom:6px; padding:6px; border-radius:6px; border:1px solid #ddd; }
+#finalPrompt{ width:100%; padding:6px; border-radius:6px; border:1px solid #ddd; }
+.note{ color:#666; font-size:12px; display:block; margin-top:6px; }
+/* Slots / memória */
+.slot-controls{ display:flex; gap:6px; margin:10px 0; }
+.slot-controls input{ flex:1; padding:6px; border-radius:6px; border:1px solid #ddd; }
+#saveCurrentToSlot{ white-space:nowrap; }
+.slots-info{ font-size:12px; margin-bottom:6px; color:#333; }
+.slot{ border:1px solid #eee; padding:8px; border-radius:6px; background:#fff; margin-bottom:6px; box-shadow:0 1px 0 rgba(0,0,0,0.03); }
+.slot strong{ display:block; font-size:13px; margin-bottom:4px; }
+.slot-preview{ font-size:12px; color:#555; margin-bottom:6px; word-break:break-word; }
+.slot-btns{ display:flex; gap:6px; flex-wrap:wrap; }
+.slot-btns button{ flex:1 1 auto; }
