@@ -12,8 +12,8 @@ const slotsEl = document.getElementById('slots');
 const slotNameEl = document.getElementById('slotName');
 const saveCurrentToSlotBtn = document.getElementById('saveCurrentToSlot');
 
-let parts = [];
-let savedPrompts = []; // up to 5 items { name: string, parts: string[] }
+let parts = []; // Array of {text: string, locked: boolean}
+let savedPrompts = []; // up to 5 items { name: string, parts: array }
 
 function saveParts(){
     chrome.storage.local.set({promptParts: parts});
@@ -22,6 +22,8 @@ function saveParts(){
 function loadParts(){
     chrome.storage.local.get(['promptParts'], res => {
         parts = res.promptParts || [];
+        // Migrate old format (strings) to new format (objects)
+        parts = parts.map(p => typeof p === 'string' ? {text: p, locked: false} : p);
         renderParts();
     });
 }
@@ -43,10 +45,13 @@ function renderParts(){
     parts.forEach((p, idx) => {
         const div = document.createElement('div');
         div.className = 'part';
+        const isLocked = p.locked || false;
+        const lockIcon = isLocked ? '🔒' : '🔓';
+        const bgColor = isLocked ? '#f5f5f5' : '';
         div.innerHTML = `
-      <textarea data-idx="${idx}">${escapeHtml(p)}</textarea>
+      <textarea data-idx="${idx}" ${isLocked ? 'readonly' : ''} style="background-color: ${bgColor}">${escapeHtml(p.text)}</textarea>
       <div class="btns">
-        <button data-action="lock" data-idx="${idx}" title="Bloquear/Desbloquear edição">🔓</button>
+        <button data-action="lock" data-idx="${idx}" title="Bloquear/Desbloquear edição">${lockIcon}</button>
         <button data-action="up" data-idx="${idx}">▲</button>
         <button data-action="down" data-idx="${idx}">▼</button>
         <button data-action="remove" data-idx="${idx}">✕</button>
@@ -67,7 +72,8 @@ function renderSlots(){
         const div = document.createElement('div');
         div.className = 'slot';
         const name = item.name || `Prompt ${idx+1}`;
-        const preview = (item.parts || []).join(' ').slice(0, 80);
+        const partsArray = item.parts || [];
+        const preview = partsArray.map(p => typeof p === 'string' ? p : p.text).join(' ').slice(0, 80);
         div.innerHTML = `
       <strong>${escapeHtml(name)}</strong>
       <div class="slot-preview">${escapeHtml(preview)}${preview.length===80?'…':''}</div>
@@ -104,6 +110,9 @@ partsEl.addEventListener('click', e => {
         textarea.readOnly = !isLocked;
         btn.textContent = isLocked ? '🔓' : '🔒';
         textarea.style.backgroundColor = isLocked ? '' : '#f5f5f5';
+        // Save the locked state
+        parts[idx].locked = !isLocked;
+        saveParts();
         return;
     }
     if (action === 'up' && idx > 0){
@@ -121,14 +130,14 @@ partsEl.addEventListener('input', e => {
     const ta = e.target.closest('textarea');
     if (!ta) return;
     const idx = Number(ta.dataset.idx);
-    parts[idx] = ta.value;
+    parts[idx].text = ta.value;
     saveParts();
 });
 
 addPartBtn.addEventListener('click', () => {
     const v = newPartEl.value.trim();
     if (!v) return;
-    parts.push(v);
+    parts.push({text: v, locked: false});
     newPartEl.value = '';
     saveParts();
     renderParts();
@@ -136,11 +145,11 @@ addPartBtn.addEventListener('click', () => {
 
 concatenateBtn.addEventListener('click', () => {
     const sep = interpretSeparator(separatorEl.value);
-    finalPromptEl.value = parts.join(sep);
+    finalPromptEl.value = parts.map(p => p.text).join(sep);
 });
 
 copyBtn.addEventListener('click', async () => {
-    const text = finalPromptEl.value || parts.join(interpretSeparator(separatorEl.value));
+    const text = finalPromptEl.value || parts.map(p => p.text).join(interpretSeparator(separatorEl.value));
     if (!text) return alert('Nada para copiar.');
     try {
         await navigator.clipboard.writeText(text);
@@ -153,7 +162,7 @@ copyBtn.addEventListener('click', async () => {
 
 // Envia mensagem para content script / injeta texto na página do ChatGPT
 sendBtn.addEventListener('click', async () => {
-    const text = finalPromptEl.value || parts.join(interpretSeparator(separatorEl.value));
+    const text = finalPromptEl.value || parts.map(p => p.text).join(interpretSeparator(separatorEl.value));
     if (!text) return alert('Nada para enviar.');
     // Tenta ativar a aba atual (poderá ser chat.openai.com)
     const [tab] = await chrome.tabs.query({active:true, currentWindow:true});
@@ -191,7 +200,8 @@ slotsEl.addEventListener('click', async (e) => {
     } else if (action === 'copy-slot'){
         const item = savedPrompts[idx];
         if (!item) return;
-        const text = (item.parts || []).join(interpretSeparator(separatorEl.value));
+        const partsArray = item.parts || [];
+        const text = partsArray.map(p => typeof p === 'string' ? p : p.text).join(interpretSeparator(separatorEl.value));
         try {
             await navigator.clipboard.writeText(text);
         } catch(err){
@@ -206,7 +216,7 @@ slotsEl.addEventListener('click', async (e) => {
 
 saveCurrentToSlotBtn.addEventListener('click', () => {
     const sep = interpretSeparator(separatorEl.value);
-    const text = finalPromptEl.value || parts.join(sep);
+    const text = finalPromptEl.value || parts.map(p => p.text).join(sep);
     if (!text) return alert('Nada para salvar.');
 
     const name = (slotNameEl.value || '').trim();
