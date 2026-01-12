@@ -46,6 +46,7 @@ function renderParts(){
         div.innerHTML = `
       <textarea data-idx="${idx}">${escapeHtml(p)}</textarea>
       <div class="btns">
+        <button data-action="lock" data-idx="${idx}" title="Bloquear/Desbloquear edição">🔓</button>
         <button data-action="up" data-idx="${idx}">▲</button>
         <button data-action="down" data-idx="${idx}">▼</button>
         <button data-action="remove" data-idx="${idx}">✕</button>
@@ -96,6 +97,15 @@ partsEl.addEventListener('click', e => {
     if (!btn) return;
     const action = btn.dataset.action;
     const idx = Number(btn.dataset.idx);
+    if (action === 'lock'){
+        const part = btn.closest('.part');
+        const textarea = part.querySelector('textarea');
+        const isLocked = textarea.readOnly;
+        textarea.readOnly = !isLocked;
+        btn.textContent = isLocked ? '🔓' : '🔒';
+        textarea.style.backgroundColor = isLocked ? '' : '#f5f5f5';
+        return;
+    }
     if (action === 'up' && idx > 0){
         [parts[idx-1], parts[idx]] = [parts[idx], parts[idx-1]];
     } else if (action === 'down' && idx < parts.length - 1){
