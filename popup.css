@@ -7,7 +7,7 @@ body{ margin:0; padding:12px; width:780px; height:600px; overflow-x:hidden; }
 .container h1{ font-size:16px; margin:0 0 8px 0; }
 #parts{ margin-bottom:6px; max-height:500px; overflow-y:auto; overflow-x:hidden; border:1px solid #eee; padding:4px; border-radius:4px; background:#fafafa;}
 .part{ padding:4px; margin-bottom:4px; background:white; border-radius:4px; box-shadow:0 1px 0 rgba(0,0,0,0.03); display:flex; gap:4px; align-items:flex-start;}
-.part textarea{ flex:1; border:2px solid #ddd; border-radius:4px; padding:4px; resize:vertical; min-height:28px; transition:all 0.2s ease; }
+.part textarea{ flex:1; border:2px solid #ddd; border-radius:4px; padding:4px; resize:vertical; min-height:64px; transition:all 0.2s ease; }
 .part textarea:not([readonly]){ background-color:#fff; border-color:#0b5fff; box-shadow: 0 0 0 2px rgba(11, 95, 255, 0.1); }
 .part textarea:not([readonly]):focus{ border-color:#0b5fff; box-shadow: 0 0 0 3px rgba(11, 95, 255, 0.2); outline:none; }
 .part textarea[readonly]{ background-color:#f0f0f0; border-color:#bbb; color:#666; cursor:not-allowed; opacity:0.8; }
