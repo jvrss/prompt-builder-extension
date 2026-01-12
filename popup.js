@@ -47,9 +47,8 @@ function renderParts(){
         div.className = 'part';
         const isLocked = p.locked || false;
         const lockIcon = isLocked ? '🔒' : '🔓';
-        const bgColor = isLocked ? '#f5f5f5' : '';
         div.innerHTML = `
-      <textarea data-idx="${idx}" ${isLocked ? 'readonly' : ''} style="background-color: ${bgColor}">${escapeHtml(p.text)}</textarea>
+      <textarea data-idx="${idx}" ${isLocked ? 'readonly' : ''} class="${isLocked ? 'locked' : 'editable'}">${escapeHtml(p.text)}</textarea>
       <div class="btns">
         <button data-action="lock" data-idx="${idx}" title="Bloquear/Desbloquear edição">${lockIcon}</button>
         <button data-action="up" data-idx="${idx}">▲</button>
@@ -109,7 +108,8 @@ partsEl.addEventListener('click', e => {
         const isLocked = textarea.readOnly;
         textarea.readOnly = !isLocked;
         btn.textContent = isLocked ? '🔓' : '🔒';
-        textarea.style.backgroundColor = isLocked ? '' : '#f5f5f5';
+        textarea.classList.toggle('locked');
+        textarea.classList.toggle('editable');
         // Save the locked state
         parts[idx].locked = !isLocked;
         saveParts();
