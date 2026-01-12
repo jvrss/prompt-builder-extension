@@ -4,7 +4,7 @@
 }
 body{ margin:0; padding:12px; width:360px; min-height:700px; overflow-y:auto; }
 .container h1{ font-size:16px; margin:0 0 8px 0; }
-#parts{ margin-bottom:10px; max-height:200px; overflow:auto; border:1px solid #eee; padding:6px; border-radius:6px; background:#fafafa;}
+#parts{ margin-bottom:10px; max-height:400px; overflow:auto; border:1px solid #eee; padding:6px; border-radius:6px; background:#fafafa;}
 .part{ padding:6px; margin-bottom:6px; background:white; border-radius:6px; box-shadow:0 1px 0 rgba(0,0,0,0.03); display:flex; gap:6px; align-items:flex-start;}
 .part textarea{ flex:1; border:1px solid #ddd; border-radius:4px; padding:6px; resize:vertical; min-height:36px;}
 .part .btns{ display:flex; flex-direction:column; gap:6px; }
